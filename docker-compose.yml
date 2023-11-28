@@ -1,0 +1,47 @@
+services:
+  #Backend application
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    depends_on: 
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/db
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - 3000:3000
+      - 9229:9229
+  
+  #Frontend application
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    command: ng serve --host 0.0.0.0
+    ports:
+      - 4200:4200
+    links:
+      - api
+
+  # Our Postgres Database for NestJS to connect to
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - 5432:5432
+
+  # The Postgres Admin tool if we want to run some custom queries and so on against our Database
+  postgres_admin:
+    image: dpage/pgadmin4
+    depends_on: 
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - 8080:80
