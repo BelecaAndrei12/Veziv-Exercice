@@ -1,23 +1,38 @@
-# Base image
-FROM node:18
+# Specify Node Version and Image
+# Name Image development (can be anything)
+FROM node:20 AS development
 
-# Create be-app directory
-WORKDIR /usr/src/be
+# Specify Working directory inside container
+WORKDIR /rr56/src/app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# Copy package-lock.json & package.json from host to inside container working directory
 COPY package*.json ./
 
-# Install app dependencies
+# Install deps inside container
 RUN npm install
 
-# Bundle app source
+#  Bundle App Sources
 COPY . .
 
-#Production build
 RUN npm run build
 
-# Exposes services on port 3000
 EXPOSE 3000
 
-# Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+################
+## PRODUCTION ##
+################
+# Build another image named production
+FROM node:18 AS production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+# Set work dir
+WORKDIR /rr56/src/app
+
+COPY --from=development /rr56/src/app/ .
+
+EXPOSE 3000
+
+# run app
+CMD [ "node", "dist/main"]
