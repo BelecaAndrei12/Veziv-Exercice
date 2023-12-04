@@ -4,6 +4,7 @@ import { PortfolioEntryEntity } from "./models/portfolio-entry.entity";
 import { Repository } from "typeorm";
 import { CreateEntryDto } from "./models/dtos/create-entry.dto";
 import { UserService } from "src/user/user.service";
+import { PatchEntryDto } from "./models/dtos/patch-entry.dto";
 
 @Injectable()
 export class PortfolioService {
@@ -44,6 +45,20 @@ export class PortfolioService {
         .where('portfolioEntry.userId = :userId', { userId })
         .getMany();
     }
+
+
+    async updateEntry(entryId: number, patchEntryDto: PatchEntryDto): Promise<PortfolioEntryEntity> {
+        const id = entryId
+        const existingEntry  = await this.portfolioRepo.findOne({ where: {id} })
+
+        if (!existingEntry) {
+            throw new NotFoundException(`Portfolio Entry with ID ${entryId} not found`);
+        }
+
+        Object.assign(existingEntry, patchEntryDto);
+        return this.portfolioRepo.save(existingEntry);
+    }
+
 
 
 

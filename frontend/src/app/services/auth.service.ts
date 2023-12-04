@@ -29,6 +29,10 @@ export class AuthService {
       )
     }
 
+    getDecodedToken() {
+      return this.jwtService.decodeToken().filteredPayload
+    }
+
     getLoggedUser():Observable<User> {
       const id = this.jwtService.decodeToken().filteredPayload.id
       return this.http.get<User>(`api/user/${id}`)

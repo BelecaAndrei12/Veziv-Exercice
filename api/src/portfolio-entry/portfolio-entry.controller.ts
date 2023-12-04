@@ -1,6 +1,7 @@
-import { Body, Controller, Get, HttpException, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, Param, Patch, Post } from "@nestjs/common";
 import { PortfolioService } from "./portfolio-entry.service";
 import { CreateEntryDto } from "./models/dtos/create-entry.dto";
+import { PatchEntryDto } from "./models/dtos/patch-entry.dto";
 
 @Controller('portfolio-entry')
 export class PortfolioEntryController {
@@ -27,5 +28,14 @@ export class PortfolioEntryController {
             throw new HttpException({ error: error.message }, error.status);
           } 
 
+    }
+
+    @Patch(':entryId')
+    async updateEntry(@Param('entryId') entryId: number, @Body() patchEntryDto: PatchEntryDto) {
+        try {
+            return this.portfolioService.updateEntry(entryId,patchEntryDto)
+        } catch (error) {
+            throw new HttpException({ error: error.message }, error.status);
+          } 
     }
 }

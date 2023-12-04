@@ -1,0 +1,171 @@
+
+.title{
+
+  .info-section{
+    padding: 1px;
+    background: linear-gradient(to right, orange, black);
+    height: 10%;
+    margin: 1%;
+    h1{
+      text-align: center;
+      margin: 5%;
+      margin-bottom: 1%;
+      font-size: xx-large;
+      color: white;
+    }
+
+    p{
+      text-align: center;
+      // font-weight: bold;
+      font-size: x-large;
+      color:white;
+    }
+  }
+
+  .title-line {
+    border: 1px solid #ccc;
+    margin: 5%;
+  }
+}
+
+.about-container {
+  width: 100%;
+  margin: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+
+  .description-section {
+  width: 60%;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-style: italic;
+  }
+}
+
+.portfolio-entries-list {
+  display: flex;
+  flex-direction: column;
+
+  .portfolio-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+
+    .entry-details {
+      flex: 1;
+      padding-right: 20px;
+
+      h2 {
+        margin-bottom: 5px;
+      }
+
+      p {
+        margin-bottom: 10px;
+      }
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .entry-image {
+      flex-shrink: 0;
+
+      .rounded-image {
+        border-radius: 5%;
+        -webkit-border-radius: 5%;
+        -moz-border-radius: 5%;
+        -ms-border-radius: 5%;
+        -o-border-radius: 5%;
+}
+    }
+
+    .entry-actions {
+      display: flex;
+      flex-direction: column;
+
+      .button {
+        margin-top: 10px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+}
+
+
+.edit-entry-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+html.overlay-visible, body.overlay-visible {
+  overflow: hidden !important;
+}
+
+::ng-deep .overlay-visible {
+  overflow: hidden !important;
+}
+
+mat-card {
+  width: 400px;
+  max-width: 100%;
+  z-index: 1001;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+form {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+button {
+  margin-top: 15px;
+}
+
+
+
