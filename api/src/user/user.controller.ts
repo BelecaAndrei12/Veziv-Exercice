@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './model/dtos/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './model/dtos/login-user.dto';
@@ -37,4 +37,12 @@ export class UserController {
   async getAllUsers() {
     return this.userService.getAllUsers()
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getUserById(@Param('id') id:number) {
+    return this.userService.getUserById(id);
+  }
+  
+
 }

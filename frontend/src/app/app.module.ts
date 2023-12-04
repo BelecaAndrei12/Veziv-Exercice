@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtModule } from '@auth0/angular-jwt';
-import { PortfolioComponent } from './private/portfolio/portfolio.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt-token");
@@ -14,7 +13,6 @@ export function tokenGetter() {
 @NgModule({
   declarations: [
     AppComponent,
-    PortfolioComponent,
   ],
   imports: [
     BrowserModule,

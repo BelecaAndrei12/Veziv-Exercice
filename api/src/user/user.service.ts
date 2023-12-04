@@ -59,5 +59,10 @@ export class UserService {
     async getAllUsers(): Promise<UserEntity[]> {
         return this.userRepo.find()
     }
+
+
+    async getUserById(id: number): Promise<UserEntity> {
+        return this.userRepo.findOne({ where: {id} })
+    }
     
 }

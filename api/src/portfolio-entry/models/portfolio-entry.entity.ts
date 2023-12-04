@@ -15,10 +15,10 @@ export class PortfolioEntryEntity {
     @Column()
     customerUrl: string;
 
-    @Column({type: 'bytea', nullable: true})
-    img: Buffer | null;
+    @Column({ nullable: true})
+    imgUrl: string
 
     @ManyToOne(() => UserEntity, (user) => user.portfolioEntries)
-    @JoinColumn({ name: 'user_id' })
+    @JoinColumn({ name: 'userId' })
     user: UserEntity;
 }
