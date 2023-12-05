@@ -3,5 +3,6 @@ export interface UserModel{
     username:string,
     email:string,
     password:string,
-    description: string
+    description: string,
+    profileImage: Buffer,
 }

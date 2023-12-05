@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './model/dtos/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './model/dtos/login-user.dto';
@@ -44,5 +44,16 @@ export class UserController {
     return this.userService.getUserById(id);
   }
   
-
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/upload-image')
+  async uploadProfileImage(@Param('id') id: number, @Body() payload: any) {
+    try {
+      const image = payload.image
+      console.log(image, typeof(image))
+      const user = await this.userService.uploadUserImage(id, image);
+      return { message: 'User image updated successfully', user };
+    } catch (error) {
+      throw new HttpException({ error: error.message }, error.status);
+    }
+  }
 }

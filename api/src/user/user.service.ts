@@ -64,5 +64,17 @@ export class UserService {
     async getUserById(id: number): Promise<UserEntity> {
         return this.userRepo.findOne({ where: {id} })
     }
-    
+
+
+    async uploadUserImage(userId: number, image: string): Promise<UserEntity> {
+        const user = await this.userRepo.findOne({where: {id:userId}})
+        if(!user){
+            throw new HttpException('User not found!',HttpStatus.BAD_REQUEST);
+        }
+
+        const imageBuffer = Buffer.from(image, 'base64');
+
+        user.profileImage = imageBuffer;
+        return this.userRepo.save(user);
+    }
 }

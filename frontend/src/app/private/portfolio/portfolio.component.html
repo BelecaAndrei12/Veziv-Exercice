@@ -6,7 +6,18 @@
   <hr class="title-line">
 </div>
 <div class="about-container">
-  <img src="../../../assets/default-image.jpg" alt="default-fallback">
+  <div class="image-section">
+  <img [src]="isPreview ? previewImage : userImage" alt="default-fallback">
+  <button  *ngIf="isPreview" (click) ="uploadImage()" class="upload-btn" mat-raised-button color="primary">
+    <mat-icon>cloud_upload</mat-icon>
+  </button>
+  <div class="upload-button">
+    <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput">
+    <label for="fileInput">
+      <mat-icon>add</mat-icon>
+    </label>
+  </div>
+</div>
   <div class="description-section">
     {{user.description}}
   </div>

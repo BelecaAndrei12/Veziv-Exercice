@@ -18,6 +18,9 @@ export class UserEntity {
     @Column()
     password: string
 
+    @Column({type: 'bytea', nullable: true})
+    profileImage:Buffer
+
     @OneToMany(() => PortfolioEntryEntity, (portfolioEntry) => portfolioEntry.user)
     portfolioEntries: PortfolioEntryEntity[];
 }
