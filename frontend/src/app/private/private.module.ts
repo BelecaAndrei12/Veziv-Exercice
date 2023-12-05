@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from "@angular/forms";
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatButtonModule,
     MatFormFieldModule,
     MatCardModule,
+    MatIconModule,
   ]
 })
 export class PrivateModule {}

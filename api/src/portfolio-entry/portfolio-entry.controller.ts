@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post } from "@nestjs/common";
 import { PortfolioService } from "./portfolio-entry.service";
 import { CreateEntryDto } from "./models/dtos/create-entry.dto";
 import { PatchEntryDto } from "./models/dtos/patch-entry.dto";
@@ -37,5 +37,10 @@ export class PortfolioEntryController {
         } catch (error) {
             throw new HttpException({ error: error.message }, error.status);
           } 
+    }
+
+    @Delete(':entryId')
+    async deleteEntry(@Param('entryId') entryId: number) {
+        return this.portfolioService.deleteEntry(entryId);
     }
 }

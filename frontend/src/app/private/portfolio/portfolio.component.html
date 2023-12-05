@@ -6,13 +6,16 @@
   <hr class="title-line">
 </div>
 <div class="about-container">
-  <img src="../../../assets/default-iamge.jpg" alt="default-fallback">
+  <img src="../../../assets/default-image.jpg" alt="default-fallback">
   <div class="description-section">
     {{user.description}}
   </div>
   <hr class="about-section-line">
 </div>
 <div class="portfolio-entries-list">
+  <div class="add-entry-button">
+    <button mat-raised-button (click) = "onAddEntry()">New Entry</button>
+  </div>
   <div *ngFor="let entry of portfolioEntries$ | async" class="portfolio-entry">
     <div class="entry-details">
       <h2>{{ entry.title }}</h2>
@@ -20,11 +23,11 @@
       <a href="{{ entry.customerUrl }}" target="_blank">{{ entry.customerUrl }}</a>
     </div>
     <div class="entry-image">
-      <img src="../../../assets/default-iamge.jpg" alt="fallback" class="rounded-image">
+      <img src="../../../assets/default-image.jpg" alt="fallback" class="rounded-image">
     </div>
     <div class="entry-actions">
-      <button (click)="editEntry(entry)">Edit</button>
-      <button (click)="deleteEntry()">Delete</button>
+      <button mat-button color="primary" (click)="editEntry(entry)">Edit</button>
+      <button mat-button color="warn" (click)="deleteEntry(entry)">Delete</button>
     </div>
   </div>
 </div>
@@ -32,6 +35,10 @@
 <div *ngIf="editEntryForm" class="edit-entry-form">
   <mat-card>
     <mat-card-title>Edit Form</mat-card-title>
+    <button mat-icon-button class="close-button" (click)="closeEntryEditForm()">
+      <mat-icon>close</mat-icon>
+    </button>
+
     <mat-card-content>
       <form [formGroup]="editEntryForm" (ngSubmit)="saveChanges()">
         <mat-form-field>
@@ -50,9 +57,41 @@
         </mat-form-field>
 
         <button type="submit" mat-raised-button color="primary">Save</button>
-        <button type="button" (click)="closeEntryEditForm()" mat-button>Cancel</button>
       </form>
     </mat-card-content>
   </mat-card>
 </div>
+
+
+
+<div *ngIf="addNewEntryForm" class="edit-entry-form">
+  <mat-card>
+    <mat-card-title>Add New Form</mat-card-title>
+    <button mat-icon-button class="close-button" (click)="closeAddEntryForm()">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <mat-card-content>
+      <form [formGroup]="addNewEntryForm" (ngSubmit)="createEntry()">
+        <mat-form-field>
+          <label>Title:</label>
+          <input matInput formControlName="title" id="title" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>Description:</label>
+          <textarea matInput formControlName="description" id="description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field>
+          <label>Customer Link:</label>
+          <input matInput formControlName="customerUrl" id="customerUrl" />
+        </mat-form-field>
+
+        <button type="submit" mat-raised-button color="primary">Add</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
 

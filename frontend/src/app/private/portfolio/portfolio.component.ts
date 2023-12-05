@@ -14,9 +14,11 @@ import { PortfolioService } from '../../services/portfolio.service';
 })
 export class PortfolioComponent {
   user: User =  {} as User;
+  imageUrl:string = "../../../assets/default-image.jpg"
   userId!: number
   portfolioEntries$: Observable<PortfolioEntry[]> | undefined;
   editEntryForm: FormGroup | null = null;
+  addNewEntryForm: FormGroup | null = null;
   activeEntry:FormGroup | null = null;
   activeEntryId: number | undefined;
 
@@ -35,8 +37,41 @@ export class PortfolioComponent {
       this.user.email = user.email
     })
     this.portfolioEntries$ =  this.userService.getUserPortfolioEntries(this.userId)
-    this.portfolioEntries$.subscribe((res)=> console.log(res))
 }
+
+  onAddEntry() {
+    this.addNewEntryForm = this.formBuilder.group({
+      title:['',Validators.required],
+      description:['', Validators.required],
+      customerUrl:['', Validators.pattern('https?://.+')]
+    })
+
+    this.activeEntry = this.addNewEntryForm
+    document.body.classList.add('overlay-visible');
+  }
+
+  createEntry() {
+    if(this.addNewEntryForm && this.addNewEntryForm.valid){
+      const newEntry = {
+        userId:this.userId,
+        title: this.activeEntry?.value.title,
+        description: this.activeEntry?.value.description,
+        customerUrl: this.activeEntry?.value.customerUrl,
+      }
+      console.log(newEntry)
+      this.portfolioService.createEntry(newEntry).subscribe(
+        () => {
+          this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+          this.closeAddEntryForm()
+        }
+      )
+    }
+  }
+
+  closeAddEntryForm(){
+    this.addNewEntryForm = null
+    document.body.classList.remove('overlay-visible');
+  }
 
   editEntry(entry: PortfolioEntry){
     this.editEntryForm = this.formBuilder.group({
@@ -57,15 +92,25 @@ export class PortfolioComponent {
   saveChanges() {
     if(this.editEntryForm && this.editEntryForm.valid) {
       const updatedEntry = {
-        title: this.activeEntry?.get('title')?.value,
-        description: this.activeEntry?.get('description')?.value,
-        customerUrl: this.activeEntry?.get('customerUrl')?.value,
+        title: this.activeEntry?.value.title,
+        description: this.activeEntry?.value.description,
+        customerUrl: this.activeEntry?.value.customerUrl,
       }
-      this.portfolioService.updateEntry(this.activeEntryId!,updatedEntry)
+      this.portfolioService.updateEntry(this.activeEntryId!,updatedEntry).subscribe(
+        () => {
+          this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+          this.closeEntryEditForm()
+        }
+      )
+      this.closeEntryEditForm()
     }
   }
 
-  deleteEntry(){
-    console.log('delete')
+  deleteEntry(entry: PortfolioEntry) {
+    this.portfolioService.deleteEntry(entry.id!).subscribe(
+      () => {
+        this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+      }
+    )
   }
 }

@@ -48,8 +48,7 @@ export class PortfolioService {
 
 
     async updateEntry(entryId: number, patchEntryDto: PatchEntryDto): Promise<PortfolioEntryEntity> {
-        const id = entryId
-        const existingEntry  = await this.portfolioRepo.findOne({ where: {id} })
+        const existingEntry  = await this.portfolioRepo.findOne({ where: {id: entryId} })
 
         if (!existingEntry) {
             throw new NotFoundException(`Portfolio Entry with ID ${entryId} not found`);
@@ -60,7 +59,13 @@ export class PortfolioService {
     }
 
 
+    async deleteEntry(entryId: number): Promise<void>  {
+        const existingEntry = await this.portfolioRepo.findOne({ where: { id: entryId } });
 
-
+        if (!existingEntry) {
+            throw new NotFoundException(`Portfolio Entry with ID ${entryId} not found`);
+        }
+        await this.portfolioRepo.remove(existingEntry)
+    }
     
 }
