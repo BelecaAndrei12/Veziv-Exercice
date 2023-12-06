@@ -18,6 +18,9 @@ export class PortfolioEntryEntity {
     @Column({ type:"bytea" ,nullable: true})
     entryImage: Buffer
 
+    @Column({default: false})
+    isHidden: boolean;
+
     @ManyToOne(() => UserEntity, (user) => user.portfolioEntries)
     @JoinColumn({ name: 'userId' })
     user: UserEntity;

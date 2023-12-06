@@ -72,7 +72,6 @@ export class PortfolioService {
 
     async uploadEntryImage(entryId: number, image:string): Promise<PortfolioEntryEntity> {
         const existingEntry = await this.portfolioRepo.findOne({ where: { id: entryId } });
-
         if (!existingEntry) {
             throw new NotFoundException(`Portfolio Entry with ID ${entryId} not found`);
         }

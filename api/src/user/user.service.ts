@@ -1,7 +1,7 @@
 import { ConflictException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./model/user.entity";
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { CreateUserDto } from "./model/dtos/create-user.dto";
 import { PasswordManagerService } from "src/auth/passwd.service";
 import { LoginUserDto } from "./model/dtos/login-user.dto";
@@ -77,5 +77,12 @@ export class UserService {
 
         user.profileImage = imageBuffer;
         return this.userRepo.save(user);
+    }
+
+    async searchByUserName(username: string):Promise<UserEntity[]> {
+        console.log(username)
+        const searchedUser =  `%${username}%`;
+        return this.userRepo.find({where: {username: Like(searchedUser)}})
+
     }
 }

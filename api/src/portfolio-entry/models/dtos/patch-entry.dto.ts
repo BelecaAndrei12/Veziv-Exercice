@@ -4,4 +4,5 @@ import { CreateEntryDto } from "./create-entry.dto";
 
 export class  PatchEntryDto extends PartialType(CreateEntryDto) {
     entryImage?: Buffer;
+    isHidden? : boolean;
 }

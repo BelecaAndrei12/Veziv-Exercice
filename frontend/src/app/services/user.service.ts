@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { PortfolioEntry } from "../models/portfolio-entry.model";
+import { User } from "../models/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -21,4 +22,10 @@ export class UserService {
     const options = { headers };
     return this.http.patch(`/api/user/${userId}/upload-image`, {image},options)
   }
+
+
+  findUserByUsername(username: string): Observable<User[]> {
+    return this.http.get<User[]>(`/api/user?username=${username}`);
+  }
+
 }

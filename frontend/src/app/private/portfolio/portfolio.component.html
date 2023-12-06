@@ -34,7 +34,7 @@
     </div>
     <div class="entry-image">
       <a href="{{ entry.customerUrl }}" target="_blank">Visit Customer Website</a>
-      <img [src]="isPreviewEntry && entry.id === activeEntryId ? previewEntryImage : (entry.entryImage ? entry.entryImage : entryImageDefault)" alt="fallback" class="rounded-image">
+      <img [src]="(isPreviewEntry && entry.id === activeEntryId) ? previewEntryImage : (entry.entryImage ? entry.entryImage : entryImageDefault)" alt="fallback" class="rounded-image">
     </div>
     <div class="entry-actions">
       <button mat-button color="accent" (click)="editEntry(entry)">
@@ -44,8 +44,8 @@
         <mat-icon>delete</mat-icon> Delete
       </button>
       <div class="upload-img-button">
-        <input type="file" (change)="onFileSelectedEntry($event,entry)" [ngStyle]="{'display': 'none'}" accept="image/*" id="fileInputEntry">
-        <label for="fileInputEntry">
+        <input type="file" (change)="onFileSelectedEntry($event,entry)" [ngStyle]="{'display': 'none'}" accept="image/*"  [id]="'fileInputEntry_' + entry.id">
+        <label [for]="'fileInputEntry_' + entry.id">
           <mat-icon>cloud_upload</mat-icon> Upload
         </label>
       </div>

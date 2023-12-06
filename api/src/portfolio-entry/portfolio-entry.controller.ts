@@ -45,8 +45,9 @@ export class PortfolioEntryController {
     }
 
     @Patch(':entryId/upload-image')
-    async uploadEntryImage(@Param('id') entryId:number, @Body() payload: any) {
+    async uploadEntryImage(@Param('entryId') entryId:number, @Body() payload: any) {
         try {
+
             const image = payload.image
             const entry  = await this.portfolioService.uploadEntryImage(entryId,image);
             return {message:'Entry image uploaded successfully',entry}

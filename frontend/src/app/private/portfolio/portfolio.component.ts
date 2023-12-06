@@ -48,13 +48,20 @@ export class PortfolioComponent {
     })
 
 
-    this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId).pipe(
-      tap(entries => console.log('Original entries:', entries)),
-      map(entries => entries.map(entry => ({ ...entry, entryImage: this.getBase64Image(entry.entryImage) }))),
-      tap(transformedEntries => console.log('Transformed entries:', transformedEntries))
-    );
+    this.entriesReload();
 
 }
+
+private entriesReload() {
+  this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId).pipe(
+    map(entries =>
+      entries
+        .map(entry => ({ ...entry, entryImage: this.getBase64Image(entry.entryImage) }))
+        .sort((a, b) => a.id! - b.id!)
+    )
+  );
+}
+
 
   onAddEntry() {
     this.addNewEntryForm = this.formBuilder.group({
@@ -77,7 +84,7 @@ export class PortfolioComponent {
       }
       this.portfolioService.createEntry(newEntry).subscribe(
         () => {
-          this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+          this.entriesReload()
           this.closeAddEntryForm()
         }
       )
@@ -114,7 +121,7 @@ export class PortfolioComponent {
       }
       this.portfolioService.updateEntry(this.activeEntryId!,updatedEntry).subscribe(
         () => {
-          this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+          this.entriesReload()
           this.closeEntryEditForm()
         }
       )
@@ -125,14 +132,13 @@ export class PortfolioComponent {
   deleteEntry(entry: PortfolioEntry) {
     this.portfolioService.deleteEntry(entry.id!).subscribe(
       () => {
-        this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId)
+        this.entriesReload()
       }
     )
   }
 
 
   async onFileSelected(event: any) {
-    console.log('user')
     const file = event.target.files[0];
     if (file) {
       try {
@@ -208,40 +214,39 @@ export class PortfolioComponent {
    }
 
 
-   async onFileSelectedEntry(event: any,entry: PortfolioEntry) {
-    this.activeEntryId = entry.id
-    console.log(this.activeEntryId)
+   async onFileSelectedEntry(event: any, entry: PortfolioEntry) {
+    this.activeEntryId = entry.id;
+    console.log(this.activeEntryId);
+
     const file = event.target.files[0];
+
     if (file) {
       try {
         const base64Data: string = await this.covertFileToBase64(file);
-        this.base64PreviewEntry = base64Data
-        this.previewEntryImage = this.getImage(base64Data)
-        this.isPreviewEntry  = true;
-        setTimeout(() => this.isDialogueActive = true, 1000)
-
+        this.base64PreviewEntry = base64Data;
+        this.previewEntryImage = this.getImage(base64Data);
+        this.isPreviewEntry = true;
       } catch (error) {
         console.log(error);
+      } finally {
+        this.isDialogueActive = true;
       }
-    } else {
-      console.log('Error: No file selected');
     }
-   }
+  }
 
-   onYesAns() {
+  onYesAns() {
     if (this.activeEntryId && this.base64PreviewEntry) {
-      this.portfolioService.uploadEntryImage(this.activeEntryId, this.base64PreviewEntry).pipe(
-        switchMap(() => this.userService.getUserPortfolioEntries(this.userId)),
-        map(entries => entries.map(entry => ({ ...entry, entryImage: this.getBase64Image(entry.entryImage) })))
-      ).subscribe(
-        transformedEntries => {
-          this.portfolioEntries$ = of(transformedEntries);
-          this.resetPreviewEntry();
-        },
-        error => {
-          console.error(error);
-        }
-      );
+      console.log(this.activeEntryId);
+      this.portfolioService.uploadEntryImage(this.activeEntryId, this.base64PreviewEntry)
+        .subscribe(
+          () => {
+            this.entriesReload();
+            this.resetPreviewEntry();
+          },
+          error => {
+            console.error(error);
+          }
+        );
     }
   }
 

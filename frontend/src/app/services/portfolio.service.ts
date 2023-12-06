@@ -27,7 +27,10 @@ export class PortfolioService {
   uploadEntryImage(entryId: number, image: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const options = { headers };
-    return this.http.patch(`/api/portfolio-entry/${entryId}/upload-image`, {image},options)
+
+    const requestBody = { image };
+
+    return this.http.patch(`/api/portfolio-entry/${entryId}/upload-image`, requestBody, options);
   }
   }
 

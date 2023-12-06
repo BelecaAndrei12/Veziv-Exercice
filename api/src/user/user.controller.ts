@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './model/dtos/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './model/dtos/login-user.dto';
@@ -32,13 +32,17 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
-  async getAllUsers() {
-    return this.userService.getAllUsers()
-  }
+  async getAllUsers(@Query('username') username?: string) {
+    if (username) {
+        console.log(username);
+        return this.userService.searchByUserName(username);
+    } else {
+        return this.userService.getAllUsers();
+    }
+}
 
-  @UseGuards(JwtAuthGuard)
+
   @Get(':id')
   async getUserById(@Param('id') id:number) {
     return this.userService.getUserById(id);

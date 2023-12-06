@@ -19,6 +19,13 @@
 </div>
 
 <div class="search-container">
-    <input type="text" placeholder="Search for workers...">
+  <input type="text" placeholder="Search for workers..." (input)="onSearchInputChange($event)">
+  <div class="search-results" *ngIf="searchResults.length > 0">
+    <ul>
+      <li *ngFor="let result of searchResults" (click)="onSearchResultClick(result)">
+        {{ result.username }} <!-- Assuming each result has a 'username' property -->
+      </li>
+    </ul>
+  </div>
 </div>
 </div>
