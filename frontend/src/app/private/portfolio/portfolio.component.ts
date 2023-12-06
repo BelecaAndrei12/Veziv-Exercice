@@ -210,6 +210,7 @@ export class PortfolioComponent {
 
    async onFileSelectedEntry(event: any,entry: PortfolioEntry) {
     this.activeEntryId = entry.id
+    console.log(this.activeEntryId)
     const file = event.target.files[0];
     if (file) {
       try {

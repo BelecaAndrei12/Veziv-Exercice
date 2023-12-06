@@ -21,8 +21,8 @@
   <div class="description-section">
     {{user.description}}
   </div>
-  <hr class="about-section-line">
 </div>
+<hr class="about-section-line">
 <div class="portfolio-entries-list">
   <div class="add-entry-button">
     <button mat-raised-button (click) = "onAddEntry()">New Entry</button>
@@ -31,14 +31,18 @@
     <div class="entry-details">
       <h2>{{ entry.title }}</h2>
       <p>{{ entry.description }}</p>
-      <a href="{{ entry.customerUrl }}" target="_blank">{{ entry.customerUrl }}</a>
     </div>
     <div class="entry-image">
+      <a href="{{ entry.customerUrl }}" target="_blank">Visit Customer Website</a>
       <img [src]="isPreviewEntry && entry.id === activeEntryId ? previewEntryImage : (entry.entryImage ? entry.entryImage : entryImageDefault)" alt="fallback" class="rounded-image">
     </div>
     <div class="entry-actions">
-      <button mat-button color="primary" (click)="editEntry(entry)">Edit</button>
-      <button mat-button color="warn" (click)="deleteEntry(entry)">Delete</button>
+      <button mat-button color="accent" (click)="editEntry(entry)">
+        <mat-icon>edit</mat-icon>Edit
+      </button>
+      <button mat-button color="warn" (click)="deleteEntry(entry)">
+        <mat-icon>delete</mat-icon> Delete
+      </button>
       <div class="upload-img-button">
         <input type="file" (change)="onFileSelectedEntry($event,entry)" [ngStyle]="{'display': 'none'}" accept="image/*" id="fileInputEntry">
         <label for="fileInputEntry">
