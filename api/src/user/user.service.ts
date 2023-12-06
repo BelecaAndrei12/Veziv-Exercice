@@ -68,6 +68,7 @@ export class UserService {
 
     async uploadUserImage(userId: number, image: string): Promise<UserEntity> {
         const user = await this.userRepo.findOne({where: {id:userId}})
+        console.log(user)
         if(!user){
             throw new HttpException('User not found!',HttpStatus.BAD_REQUEST);
         }

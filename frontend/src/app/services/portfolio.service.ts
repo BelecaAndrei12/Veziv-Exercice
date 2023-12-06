@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { PortfolioEntry } from "../models/portfolio-entry.model";
 import { Observable } from "rxjs";
@@ -23,4 +23,11 @@ export class PortfolioService {
   deleteEntry(entryId: number): Observable<void> {
     return this.http.delete<void>(`api/portfolio-entry/${entryId}`)
   }
-}
+
+  uploadEntryImage(entryId: number, image: string): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const options = { headers };
+    return this.http.patch(`/api/portfolio-entry/${entryId}/upload-image`, {image},options)
+  }
+  }
+

@@ -59,6 +59,7 @@ export class PortfolioService {
     }
 
 
+
     async deleteEntry(entryId: number): Promise<void>  {
         const existingEntry = await this.portfolioRepo.findOne({ where: { id: entryId } });
 
@@ -68,4 +69,18 @@ export class PortfolioService {
         await this.portfolioRepo.remove(existingEntry)
     }
     
+
+    async uploadEntryImage(entryId: number, image:string): Promise<PortfolioEntryEntity> {
+        const existingEntry = await this.portfolioRepo.findOne({ where: { id: entryId } });
+
+        if (!existingEntry) {
+            throw new NotFoundException(`Portfolio Entry with ID ${entryId} not found`);
+        }
+
+        const imageBuffer = Buffer.from(image,'base64');
+
+        existingEntry.entryImage = imageBuffer;
+
+        return this.portfolioRepo.save(existingEntry);
+    }
 }

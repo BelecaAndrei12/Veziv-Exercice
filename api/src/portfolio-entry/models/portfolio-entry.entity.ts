@@ -15,8 +15,8 @@ export class PortfolioEntryEntity {
     @Column()
     customerUrl: string;
 
-    @Column({ nullable: true})
-    imgUrl: string
+    @Column({ type:"bytea" ,nullable: true})
+    entryImage: Buffer
 
     @ManyToOne(() => UserEntity, (user) => user.portfolioEntries)
     @JoinColumn({ name: 'userId' })

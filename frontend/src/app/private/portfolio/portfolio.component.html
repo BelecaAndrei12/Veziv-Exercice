@@ -34,11 +34,17 @@
       <a href="{{ entry.customerUrl }}" target="_blank">{{ entry.customerUrl }}</a>
     </div>
     <div class="entry-image">
-      <img src="../../../assets/default-image.jpg" alt="fallback" class="rounded-image">
+      <img [src]="isPreviewEntry && entry.id === activeEntryId ? previewEntryImage : (entry.entryImage ? entry.entryImage : entryImageDefault)" alt="fallback" class="rounded-image">
     </div>
     <div class="entry-actions">
       <button mat-button color="primary" (click)="editEntry(entry)">Edit</button>
       <button mat-button color="warn" (click)="deleteEntry(entry)">Delete</button>
+      <div class="upload-img-button">
+        <input type="file" (change)="onFileSelectedEntry($event,entry)" [ngStyle]="{'display': 'none'}" accept="image/*" id="fileInputEntry">
+        <label for="fileInputEntry">
+          <mat-icon>cloud_upload</mat-icon> Upload
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -101,6 +107,22 @@
 
         <button type="submit" mat-raised-button color="primary">Add</button>
       </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+<div  *ngIf ='isDialogueActive'class="upload-dialogue">
+  <mat-card>
+    <mat-card-title>Upload Image</mat-card-title>
+    <mat-card-content>
+      <div mat-dialog-content>
+        <p>Do you want to upload the image?</p>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button (click)="onYesAns()">Yes</button>
+        <button mat-button (click)="onNoAns()">No</button>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

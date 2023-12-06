@@ -49,7 +49,6 @@ export class UserController {
   async uploadProfileImage(@Param('id') id: number, @Body() payload: any) {
     try {
       const image = payload.image
-      console.log(image, typeof(image))
       const user = await this.userService.uploadUserImage(id, image);
       return { message: 'User image updated successfully', user };
     } catch (error) {

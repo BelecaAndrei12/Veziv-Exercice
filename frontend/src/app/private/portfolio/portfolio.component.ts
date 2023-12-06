@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, map, of, switchMap, tap } from 'rxjs';
 import { PortfolioEntry } from '../../models/portfolio-entry.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PortfolioService } from '../../services/portfolio.service';
@@ -14,7 +14,8 @@ import { PortfolioService } from '../../services/portfolio.service';
 })
 export class PortfolioComponent {
   user: User =  {} as User;
-  userImage: string | ArrayBuffer = '../../../assets/default-image.jpg'
+  userImage: string | ArrayBuffer = '../../../assets/default-image.jpg';
+  entryImageDefault: string = '../../../assets/default-image.jpg';
   userId!: number
   portfolioEntries$: Observable<PortfolioEntry[]> | undefined;
   editEntryForm: FormGroup | null = null;
@@ -22,8 +23,12 @@ export class PortfolioComponent {
   activeEntry:FormGroup | null = null;
   activeEntryId: number | undefined;
   previewImage: string = '';
-  base64Preview: string = ''
-  isPreview: boolean = false
+  previewEntryImage: string = '';
+  base64PreviewEntry: string= '';
+  base64Preview: string = '';
+  isPreview: boolean = false;
+  isPreviewEntry = false;
+  isDialogueActive = false;
 
   constructor(
     private authService:AuthService,
@@ -43,7 +48,12 @@ export class PortfolioComponent {
     })
 
 
-    this.portfolioEntries$ =  this.userService.getUserPortfolioEntries(this.userId)
+    this.portfolioEntries$ = this.userService.getUserPortfolioEntries(this.userId).pipe(
+      tap(entries => console.log('Original entries:', entries)),
+      map(entries => entries.map(entry => ({ ...entry, entryImage: this.getBase64Image(entry.entryImage) }))),
+      tap(transformedEntries => console.log('Transformed entries:', transformedEntries))
+    );
+
 }
 
   onAddEntry() {
@@ -122,6 +132,7 @@ export class PortfolioComponent {
 
 
   async onFileSelected(event: any) {
+    console.log('user')
     const file = event.target.files[0];
     if (file) {
       try {
@@ -130,7 +141,6 @@ export class PortfolioComponent {
         this.previewImage = this.getImage(base64Data)
         this.isPreview = true;
 
-        //await this.userService.updateProfileImage(this.userId, base64Data).toPromise();
       } catch (error) {
         console.log(error);
       }
@@ -158,6 +168,13 @@ export class PortfolioComponent {
     this.isPreview = false
   }
 
+  resetPreviewEntry() {
+    this.previewEntryImage = ''
+    this.base64PreviewEntry = ''
+    this.isPreviewEntry = false
+    this.isDialogueActive = false
+  }
+
 
   covertFileToBase64(file: any): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -177,13 +194,58 @@ export class PortfolioComponent {
   }
 
 
-  getBase64Image(profileImage: any): string {
-    const arrayBuffer = new Uint8Array(profileImage.data);
+  getBase64Image(image: any): string {
+    if(image !== null) {
+    const arrayBuffer = new Uint8Array(image.data);
     const binary = [...arrayBuffer].map(byte => String.fromCharCode(byte)).join('');
-    return `data:${profileImage.type};base64,${btoa(binary)}`;
+    return `data:${image.type};base64,${btoa(binary)}`; }
+    return ''
   }
+
 
    getImage(base64Data: string): string {
     return `data:Buffer;base64,${base64Data}`;
    }
+
+
+   async onFileSelectedEntry(event: any,entry: PortfolioEntry) {
+    this.activeEntryId = entry.id
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const base64Data: string = await this.covertFileToBase64(file);
+        this.base64PreviewEntry = base64Data
+        this.previewEntryImage = this.getImage(base64Data)
+        this.isPreviewEntry  = true;
+        setTimeout(() => this.isDialogueActive = true, 1000)
+
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      console.log('Error: No file selected');
+    }
+   }
+
+   onYesAns() {
+    if (this.activeEntryId && this.base64PreviewEntry) {
+      this.portfolioService.uploadEntryImage(this.activeEntryId, this.base64PreviewEntry).pipe(
+        switchMap(() => this.userService.getUserPortfolioEntries(this.userId)),
+        map(entries => entries.map(entry => ({ ...entry, entryImage: this.getBase64Image(entry.entryImage) })))
+      ).subscribe(
+        transformedEntries => {
+          this.portfolioEntries$ = of(transformedEntries);
+          this.resetPreviewEntry();
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+   onNoAns(){
+    this.resetPreviewEntry()
+   }
+
 }

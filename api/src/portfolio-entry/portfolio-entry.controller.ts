@@ -43,4 +43,15 @@ export class PortfolioEntryController {
     async deleteEntry(@Param('entryId') entryId: number) {
         return this.portfolioService.deleteEntry(entryId);
     }
+
+    @Patch(':entryId/upload-image')
+    async uploadEntryImage(@Param('id') entryId:number, @Body() payload: any) {
+        try {
+            const image = payload.image
+            const entry  = await this.portfolioService.uploadEntryImage(entryId,image);
+            return {message:'Entry image uploaded successfully',entry}
+        } catch (error) {
+            throw new HttpException({ error: error.message }, error.status);
+          } 
+    }
 }
