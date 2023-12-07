@@ -156,6 +156,7 @@ private entriesReload() {
   }
 
   uploadImage() {
+    console.log(this.base64Preview)
     this.userService.updateProfileImage(this.userId, this.base64Preview)
       .pipe(
         switchMap(() => this.authService.getLoggedUser())
